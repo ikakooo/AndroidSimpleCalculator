@@ -4,7 +4,6 @@ package com.example.simplecalculator
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log.d
 import android.widget.Button
 import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_calculator.*
@@ -33,8 +32,9 @@ class CalculatorActivity : AppCompatActivity() {
             if ( firstNumberEditTextID.text.isNotEmpty() && secondNumberEditTextID.text.isNotEmpty()) {
                 val firsNum = firstNumberEditTextID.text.toString()
                 val secondNum = secondNumberEditTextID.text.toString()
-                val sumOfToValue = operatorFromChar(text.toString()[0]).invoke(firsNum.toInt(),secondNum.toInt())
-                runResultActivity("$firsNum + $secondNum = $sumOfToValue" )
+                val operator = text.toString()[0]
+                val sumOfToValue = operatorFromChar(operator).invoke(firsNum.toFloat(),secondNum.toFloat())
+                runResultActivity("$firsNum $operator $secondNum = $sumOfToValue" )
             } else {
                 Toast.makeText(this@CalculatorActivity, "Please enter both numbers", Toast.LENGTH_LONG).show()
             }
@@ -44,8 +44,8 @@ class CalculatorActivity : AppCompatActivity() {
     }
 
     private fun runResultActivity(result:String) {
-        val intent = Intent(this@CalculatorActivity, MainActivity::class.java)
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
+        val intent = Intent(this@CalculatorActivity, ResultActivity::class.java)
+        //intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
         intent.putExtra("resultID", result)
         startActivity(intent)
         overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
@@ -54,7 +54,7 @@ class CalculatorActivity : AppCompatActivity() {
 
 
 
-    private fun operatorFromChar(charOperator: Char):(Int, Int)->Int {
+    private fun operatorFromChar(charOperator: Char):(Float, Float)->Float {
         return when(charOperator)
         {
             '+'->{a,b->a+b}
